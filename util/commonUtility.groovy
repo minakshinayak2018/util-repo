@@ -1,6 +1,6 @@
    
             
-def build(){
+def build(String commonProps){
 			try{
 				dir(gitProps.path){
 					sh commonProps.mavenClean
@@ -15,13 +15,13 @@ def build(){
 					notifyBuild(status)
 					} 
 			}
-def scan(){                  
+def scan(String commonProps){                  
 		dir(gitProps.path){
 			sh commonProps.buildSonarScan
 			echo 'SONAR SCAN SUCCESS'
 			}
           } 
-def artifactory(){
+def artifactory(String artifactoryProps ){
 				server = Artifactory.server artifactoryProps.artifactServer
 				uploadSpec = """{
                 		"files": [
@@ -36,7 +36,7 @@ def artifactory(){
 				echo 'ARTIFACT SUCCESS'
 				}
 				
-def deploy(){
+def deploy(String deployProps){
 			try	{
 				sh deployProps.dockerContainerId
 				output=readFile('result').trim()
@@ -53,22 +53,6 @@ def deploy(){
 			echo 'DEPLOY SUCCESS'				
 		}
 					
-
-def notifyBuild(String buildStatus)
-{
-  def subject = "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'"
-  def summary = "${subject} (${env.BUILD_URL})"
-  def details = """<p>STARTED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
-    <p>Check console output at "<a href="${env.BUILD_URL}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>
-    <p>Please give input to deploy"<a href="${env.JENKINS_URL}/job/${env.JOB_NAME}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
-	
- emailext (
-      subject: subject,
-      body: details,
-      to: commonProps.recipients
-    )
- 
-}
 
 
 return this
