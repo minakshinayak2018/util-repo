@@ -11,9 +11,6 @@ def build(String commonProps){
 			catch (e) {
 					status = "FAILED"
 						} 
-			finally {
-					notifyBuild(status)
-					} 
 			}
 def scan(String commonProps){                  
 		dir(gitProps.path){
@@ -22,7 +19,7 @@ def scan(String commonProps){
 			}
           } 
 def artifactory(String artifactoryProps ){
-				server = Artifactory.server artifactoryProps.artifactServer
+				server = Artifactory.server artifactoryProps.ARTIFACTORY_ID
 				uploadSpec = """{
                 		"files": [
                     		{	
@@ -33,7 +30,7 @@ def artifactory(String artifactoryProps ){
                     		]
                 		}"""
             			server.upload(uploadSpec)
-				echo 'ARTIFACT SUCCESS'
+				echo ' UPLOAD ARTIFACT SUCCESS'
 				}
 				
 def deploy(String deployProps){
@@ -48,7 +45,7 @@ def deploy(String deployProps){
 					{
 						echo 'DELETE FAILED'
 					}
-			sh deployProps.dockerDeploy
+			sh deployProps.dockerImageDeploy
 			sh deployProps.dockerRestart
 			echo 'DEPLOY SUCCESS'				
 		}
