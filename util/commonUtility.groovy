@@ -12,7 +12,7 @@ def recipients = emailextrecipients([ [$class: 'DevelopersRecipientProvider'],[$
       compressLog: true,	 
       subject: subject,
       body: details,
-      mail to: recepients
+      to: commonProps.recipients
     )
   }
 
