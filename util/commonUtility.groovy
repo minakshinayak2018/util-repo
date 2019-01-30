@@ -7,6 +7,8 @@ def notifyBuild()
     <p>Please give input to deploy"<a href="${env.JENKINS_URL}/job/${env.JOB_NAME}">${env.JOB_NAME} [${env.BUILD_NUMBER}]</a>"</p>"""
 	
  emailext (
+      attachLog: true,
+      compressLog: true,	 
       subject: subject,
       body: details,
       to: commonProps.recipients
